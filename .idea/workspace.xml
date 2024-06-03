@@ -4,17 +4,78 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aad6d8fe-bf2e-4703-a41b-1f0bba100f3b" name="Changes" comment="" />
+    <list default="true" id="aad6d8fe-bf2e-4703-a41b-1f0bba100f3b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/files/tsne scores.csv" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/tsne scores.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/kdd-finalproject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/kdd-finalproject.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/src/main/CSVProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/main/CSVProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/src/main/DBSCAN.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/main/DBSCAN.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kdd-finalproject/src/main/Processor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/src/main/Processor.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2hNdbVn6PYv9vjCktfVISI6vnao" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aad6d8fe-bf2e-4703-a41b-1f0bba100f3b" name="Changes" comment="" />
+      <created>1717438542481</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1717438542481</updated>
+    </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
