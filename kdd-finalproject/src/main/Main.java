@@ -6,9 +6,9 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         Processor processor = new CSVProcessor();
-        List<String[]> records = processor.readData("./files/tsne scores.csv");
+        List<String[]> records = processor.readData("./files/iris.data");
         records.remove(0);
-        // processor.processData(records);
+//        processor.processData(records);
         double[][] data = convertToDoubleArray(records);
 
         int[] minPointsRange = {2, 3, 4, 5, 6, 7, 8, 9, 10};
