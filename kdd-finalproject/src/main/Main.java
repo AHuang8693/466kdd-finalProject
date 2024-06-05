@@ -1,7 +1,6 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -69,15 +68,67 @@ public class Main {
     }
 
     public static double evaluateCluster(List<List<double[]>> clusters) {
-        if (clusters.isEmpty()) {
+        /*
+        Pick random minPoints and epsilon
+        generate clusters
+        Pick a random point in a every cluster
+            In that cluster, calculate distance of that point from every other points (e.g 5, 10, 25)
+            Find the biggest gap between distance (e.g. 15)
+        average all the gaps for each cluster
+        We want to minimize this gap
+         */
+        //silhouette score?
+        //score - (#noise/#totalPoints)
+        //plotly
+        if (clusters.isEmpty()) { //if no clusters were generated
             return 0.0;
         }
-
-        double totalSize = 0;
+        double totalSize = 0;   //else, find the avg gap for all clusters
+        double gapSum = 0;
         for (List<double[]> cluster : clusters) {
-            totalSize += cluster.size();
-        }
+            if(cluster.size() > 1) {
+                Random randomizer = new Random();
+                double[] randPoint = cluster.get(randomizer.nextInt(cluster.size())); //choose random point
+                List<double[]> tempCluster = new ArrayList<>(cluster); //make a copy
+                tempCluster.remove(randPoint);  //remove the random point
+                List<Double> distList = new ArrayList<>(); //distance list
+                for (double[] point : tempCluster) {
+                    distList.add(findDistance(randPoint, point));
+                }
+                Collections.sort(distList);
+                Collections.reverse(distList); //descending order
+                gapSum += findGap(distList); //Find the largest gap in cluster
+            }
 
-        return totalSize / clusters.size(); // Average cluster size
+        }
+        return gapSum / clusters.size(); // Average the gap of all clusters
+    }
+
+    private static double findDistance(double[] point1, double[] point2) {
+        double sum = 0;
+        for (int i = 0; i < point1.length; i++) {
+            sum += Math.pow(point1[i] - point2[i], 2);
+        }
+        return Math.sqrt(sum);
+    }
+
+    /**
+     * finds the largest gap in a list sorted in descending order.
+     * @param myList    A list in descending order
+     * @return  The largest gap between values in the list
+     */
+    private static double findGap(List<Double> myList) {
+        double maxGap = 0;
+        double gap = 0;
+        double max = myList.get(0);
+        double cur;
+        for (int i = 0; i < myList.size(); i++) {
+            cur = myList.get(i);
+            gap = max - cur;
+            if (gap > maxGap) {
+                maxGap = gap;
+            }
+        }
+        return maxGap;
     }
 }
