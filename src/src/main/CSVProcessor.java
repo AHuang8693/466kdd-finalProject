@@ -13,12 +13,27 @@ public class CSVProcessor implements Processor {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                records.add(values);
+                List<String> decimalValues = new ArrayList<>();
+                for (String value : values) {
+                    if (isDecimal(value)) {
+                        decimalValues.add(value);
+                    }
+                }
+                records.add(decimalValues.toArray(new String[0]));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return records;
+    }
+
+    private boolean isDecimal(String value) {
+        try {
+            Double.parseDouble(value);
+            return value.contains(".");
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public void processData(List<String[]> records) {
