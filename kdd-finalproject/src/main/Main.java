@@ -11,23 +11,28 @@ public class Main {
         double[][] data = convertToDoubleArray(records);
 
         int[] minPointsRange = {2, 3, 4, 5, 6, 7, 8, 9, 10};
-        double bestEvaluation = 0;
+        double[] epsilonRange = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+        double bestEvaluation = 1000;   //arbitrary large number
         List<List<double[]>> bestClusters = new ArrayList<>();
         int bestMinPoints = minPointsRange[0];
+        double bestEpsilon = 0.5;
 
         for (int minPoints : minPointsRange) {
-            DBSCAN dbscan = new DBSCAN(0.5, minPoints);
-            List<List<double[]>> clusters = dbscan.fit(data);
-            double evaluation = evaluateCluster(clusters);
-            System.out.println("MinPoints: " + minPoints + ", Evaluation: " + evaluation);
-            if (evaluation > bestEvaluation) {
-                bestEvaluation = evaluation;
-                bestClusters = clusters;
-                bestMinPoints = minPoints;
+            for (double epsilon : epsilonRange) {
+                DBSCAN dbscan = new DBSCAN(epsilon, minPoints);
+                List<List<double[]>> clusters = dbscan.fit(data);
+                double evaluation = evaluateCluster(clusters);
+                System.out.println("MinPoints, Epsilon: [" + minPoints + ", " + epsilon+ "], Evaluation: " + evaluation);
+                if (evaluation < bestEvaluation) {  //we want a low value, since evaluation is average gap size
+                    bestEvaluation = evaluation;
+                    bestClusters = clusters;
+                    bestMinPoints = minPoints;
+                    bestEpsilon = epsilon;
+                }
             }
         }
 
-        System.out.println("Best MinPoints: " + bestMinPoints);
+        System.out.println("Best MinPoints, Epsilon: [" + bestMinPoints + ", " + bestEpsilon + "]");
         System.out.println("Clusters:");
         for (int i = 0; i < bestClusters.size(); i++) {
             System.out.println("Cluster " + (i + 1) + ":");
@@ -81,7 +86,7 @@ public class Main {
         //score - (#noise/#totalPoints)
         //plotly
         if (clusters.isEmpty()) { //if no clusters were generated
-            return 0.0;
+            return 1000.0; //large numbers are valued less
         }
         double totalSize = 0;   //else, find the avg gap for all clusters
         double gapSum = 0;
