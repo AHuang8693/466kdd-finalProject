@@ -84,7 +84,7 @@ public class Main {
                     for (int j = 0; j < point.length; j++) {
                         writer.write(point[j] + (j < point.length - 1 ? ", " : ""));
                     }
-                    writer.write(", " + (i + 1) + "\n");
+                    writer.write(", Cluster" + (i + 1) + "\n");
                 }
             }
             System.out.println("Written to file " + fileName);
