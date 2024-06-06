@@ -123,17 +123,19 @@ public class Main {
      * @return  The largest gap between values in the list
      */
     private static double findGap(List<Double> myList) {
-        double maxGap = 0;
-        double gap = 0;
-        double max = myList.get(0);
-        double cur;
-        for (int i = 0; i < myList.size(); i++) {
-            cur = myList.get(i);
-            gap = max - cur;
-            if (gap > maxGap) {
-                maxGap = gap;
+        if(myList.size() > 1) {
+            double maxGap = 0;
+            double gap = 0;
+            double max = myList.get(0);
+            double cur;
+            for (int i = 0; i < myList.size(); i++) {
+                cur = myList.get(i);
+                gap = max - cur;
+                if (gap > maxGap) {
+                    maxGap = gap;
+                }
             }
-        }
-        return maxGap;
+            return maxGap;
+        } else {return myList.get(0);} //if size is 1, then cluster size is 2. distance is already the maxGap
     }
 }
