@@ -1,5 +1,8 @@
 package main;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,17 +32,9 @@ public class Main {
         }
 
         System.out.println("Best MinPoints: " + bestMinPoints);
-        System.out.println("Clusters:");
-        for (int i = 0; i < bestClusters.size(); i++) {
-            System.out.println("Cluster " + (i + 1) + ":");
-            for (double[] point : bestClusters.get(i)) {
-                System.out.print("(");
-                for (double val : point) {
-                    System.out.print(val + " ");
-                }
-                System.out.println(")");
-            }
-        }
+
+        String cluster = "cluster1";
+        writeClustersToFile(bestClusters, cluster);
 
 //        DBSCAN dbscan = new DBSCAN(0.5, 3);
 //        List<List<double[]>> clusters = dbscan.fit(data);
@@ -79,5 +74,22 @@ public class Main {
         }
 
         return totalSize / clusters.size(); // Average cluster size
+    }
+
+    public static void writeClustersToFile(List<List<double[]>> bestClusters, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (int i = 0; i < bestClusters.size(); i++) {
+                for (double[] point : bestClusters.get(i)) {
+
+                    for (int j = 0; j < point.length; j++) {
+                        writer.write(point[j] + (j < point.length - 1 ? ", " : ""));
+                    }
+                    writer.write(", " + (i + 1) + "\n");
+                }
+            }
+            System.out.println("Written to file " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
