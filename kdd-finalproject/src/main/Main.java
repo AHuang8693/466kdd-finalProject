@@ -1,6 +1,12 @@
 package main;
 
+
 import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -31,7 +37,7 @@ public class Main {
                 }
             }
         }
-
+      
         System.out.println("Best MinPoints, Epsilon: [" + bestMinPoints + ", " + bestEpsilon + "]");
         System.out.println("Clusters:");
         for (int i = 0; i < bestClusters.size(); i++) {
@@ -44,6 +50,9 @@ public class Main {
                 System.out.println(")");
             }
         }
+
+        String cluster = "cluster1";
+        writeClustersToFile(bestClusters, cluster);
 
 //        DBSCAN dbscan = new DBSCAN(0.5, 3);
 //        List<List<double[]>> clusters = dbscan.fit(data);
@@ -137,5 +146,22 @@ public class Main {
             }
             return maxGap;
         } else {return myList.get(0);} //if size is 1, then cluster size is 2. distance is already the maxGap
+    }
+
+    public static void writeClustersToFile(List<List<double[]>> bestClusters, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (int i = 0; i < bestClusters.size(); i++) {
+                for (double[] point : bestClusters.get(i)) {
+
+                    for (int j = 0; j < point.length; j++) {
+                        writer.write(point[j] + (j < point.length - 1 ? ", " : ""));
+                    }
+                    writer.write(", " + (i + 1) + "\n");
+                }
+            }
+            System.out.println("Written to file " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
