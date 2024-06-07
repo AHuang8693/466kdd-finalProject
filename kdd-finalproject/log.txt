@@ -1,7 +1,8 @@
 
 Andy Huang - Evaluation code
-* Added evaluation functions for gap score (finding the largest gap distance b/w points in a cluster): 2 hours
-* Added evaluation functions for 
+* Added evaluation functions for gap score (finding the largest gap distance b/w points in a cluster): 1 hours
+* Added evaluation functions for silhouette score: 2 hours
+* changed double[] data into DataPoint class: 1 hour
 
 Ryan Smith - Algorithm/processor code
 
