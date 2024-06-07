@@ -195,7 +195,7 @@ public class Main {
         }
         int totalInstances = cluster.size();
         double entropy = 0.0;
-        int tempctr = 1;
+//        int tempctr = 1;
         for (Map.Entry<String, Integer> entry : labelCounts.entrySet()) {
             double proportion = (double) entry.getValue() / totalInstances;
 //            System.out.println("E" + tempctr++ + ": " + (proportion * log2(proportion)));
