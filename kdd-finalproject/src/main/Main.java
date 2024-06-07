@@ -18,7 +18,7 @@ public class Main {
         List<DataPoint> dataList = convertToDataPoint(data);
         //default: 5, 0.5
         int[] minPointsRange = {2, 3, 4, 5, 6, 7, 8, 9, 10};
-        double[] epsilonRange = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5};
+        double[] epsilonRange = {0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5};
         double bestEvaluation = -1;   //worst possible silhouette score
         List<List<DataPoint>> bestClusters = new ArrayList<>();
         int bestMinPoints = minPointsRange[0];
