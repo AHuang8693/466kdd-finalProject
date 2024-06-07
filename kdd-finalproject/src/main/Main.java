@@ -30,7 +30,7 @@ public class Main {
                 List<List<DataPoint>> clusters = dbscan.fit(dataList);
                 double evaluation = evaluateSilhouette(clusters);
                 System.out.println("MinPoints, Epsilon: [" + minPoints + ", " + epsilon+ "], Evaluation: " + evaluation);
-                if (evaluation > bestEvaluation) {  //we want a low value, since evaluation is average gap size
+                if (evaluation > bestEvaluation) {  //we want a high value for silhouette
                     bestEvaluation = evaluation;
                     bestClusters = clusters;
                     bestMinPoints = minPoints;
@@ -55,26 +55,6 @@ public class Main {
         String cluster = "cluster1";
         writeClustersToFile(bestClusters, cluster);
 
-        double totalEntropy = calculateTotalEntropy(bestClusters, dataList);
-        double totalPurity = calculateTotalPurity(bestClusters);
-
-        System.out.println("Total Entropy: " + totalEntropy);
-        System.out.println("Total Purity: " + totalPurity);
-//        DBSCAN dbscan = new DBSCAN(0.5, 3);
-//        List<List<double[]>> clusters = dbscan.fit(data);
-//
-//        System.out.println("Clusters:");
-//        for (int i = 0; i < clusters.size(); i++) {
-//            System.out.println("Cluster " + (i + 1) + ":");
-//            for (double[] point : clusters.get(i)) {
-//                System.out.print("(");
-//                for (double val : point) {
-//                    System.out.print(val + " ");
-//                }
-//                System.out.println(")");
-//            }
-//        }
-
     }
 
     private static double[][] convertToDoubleArray(List<String[]> records) {
@@ -89,7 +69,7 @@ public class Main {
 
     //score - (#noise/#totalPoints) ?
     public static double evaluateSilhouette(List<List<DataPoint>> clusters) {
-        if (clusters.isEmpty()) { //if no clusters were generated
+        if (clusters.isEmpty() || clusters.size() < 2) { //can't compare with zero or less than two clusters
             return -1.0; //ranges -1 to 1, with -1 being the worst
         }
 
@@ -130,6 +110,7 @@ public class Main {
         return totalSilScore / totalPoints;
     }
 
+    //used for the gap statistic
     public static double evaluateCluster(List<List<DataPoint>> clusters) {
         if (clusters.isEmpty()) { //if no clusters were generated
             return 1000.0; //large numbers are valued less
