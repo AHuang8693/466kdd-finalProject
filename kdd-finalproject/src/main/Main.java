@@ -54,6 +54,9 @@ public class Main {
         String cluster = "cluster1";
         writeClustersToFile(bestClusters, cluster);
 
+//        testCalculateClusterEntropy();
+//        testCalculateTotalEntropy();
+
 //        DBSCAN dbscan = new DBSCAN(0.5, 3);
 //        List<List<double[]>> clusters = dbscan.fit(data);
 //
@@ -163,5 +166,122 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static double calculateClusterEntropy(List<double[]> cluster) {
+        Map<String, Integer> labelCounts = new HashMap<>();
+        for (double[] point : cluster) {
+            String label = String.valueOf(point[point.length - 1]);
+            labelCounts.put(label, labelCounts.getOrDefault(label, 0) + 1);
+        }
+        int totalInstances = cluster.size();
+        double entropy = 0.0;
+        for (Map.Entry<String, Integer> entry : labelCounts.entrySet()) {
+            double probability = (double) entry.getValue() / totalInstances;
+            entropy -= probability * (Math.log(probability) / Math.log(2));
+        }
+        return entropy;
+    }
+
+    public static double calculateTotalEntropy(List<List<double[]>> clusters) {
+        double totalEntropy = 0.0;
+        int totalInstances = 0;
+
+        for (List<double[]> cluster : clusters) {
+            int clusterSize = cluster.size();
+            totalInstances += clusterSize;
+            totalEntropy += calculateClusterEntropy(cluster) * clusterSize;
+        }
+        if (totalInstances==0){
+            return 0;
+        }else {
+            return totalEntropy / totalInstances;
+        }
+    }
+
+    public static double calculateClusterPurity(List<double[]> cluster) {
+        return (double) getMaxLabelCount(getLabelCounts(cluster)) / cluster.size();
+    }
+
+    public static double calculateTotalPurity(List<List<double[]>> clusters) {
+        int totalInstances = 0;
+        int sumMaxLabelCounts = 0;
+
+        for (List<double[]> cluster : clusters) {
+            Map<String, Integer> labelCounts = getLabelCounts(cluster);
+            int maxLabelCount = getMaxLabelCount(labelCounts);
+            sumMaxLabelCounts += maxLabelCount;
+            totalInstances += cluster.size();
+        }
+        if (totalInstances==0){
+            return 0;
+        }else {
+            return (double) sumMaxLabelCounts / totalInstances;
+        }
+    }
+
+    private static int getMaxLabelCount(Map<String, Integer> labelCounts){
+        return labelCounts.values().stream().max(Integer::compare).orElse(0);
+    }
+
+    public static Map<String, Integer> getLabelCounts(List<double[]> cluster) {
+        Map<String, Integer> labelCounts = new HashMap<>();
+        for (double[] point : cluster) {
+            String label = String.valueOf(point[point.length - 1]);
+            labelCounts.put(label, labelCounts.getOrDefault(label, 0) + 1);
+        }
+        return labelCounts;
+    }
+
+    private static void testCalculateClusterEntropy() {
+        // Test case 1: Single class cluster
+        List<double[]> cluster1 = new ArrayList<>();
+        cluster1.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        cluster1.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        cluster1.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        double entropy1 = calculateClusterEntropy(cluster1);
+        System.out.println(entropy1 + " testCalculateClusterEntropy - Single class 0.0");
+
+        // Test case 2: Two classes with equal distribution
+        List<double[]> cluster2 = new ArrayList<>();
+        cluster2.add(new double[]{1.0, 1.0, 1.0, 1.0, 0.0});
+        cluster2.add(new double[]{1.0, 1.0, 1.0, 1.0, 0.0});
+        cluster2.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        cluster2.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        double entropy2 = calculateClusterEntropy(cluster2);
+        System.out.println(entropy2 + " testCalculateClusterEntropy - Two classes equal distribution 1.0");
+
+        // Test case 3: Two classes with unequal distribution
+        List<double[]> cluster3 = new ArrayList<>();
+        cluster3.add(new double[]{1.0, 1.0, 1.0, 1.0, 0.0});
+        cluster3.add(new double[]{1.0, 1.0, 1.0, 1.0, 0.0});
+        cluster3.add(new double[]{1.0, 1.0, 1.0, 1.0, 0.0});
+        cluster3.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        double entropy3 = calculateClusterEntropy(cluster3);
+        System.out.println(entropy3 + " testCalculateClusterEntropy - Two classes unequal distribution 0.811");
+    }
+
+    private static void testCalculateTotalEntropy() {
+        // Test case 1: Single cluster
+        List<List<double[]>> clusters1 = new ArrayList<>();
+        List<double[]> cluster1 = new ArrayList<>();
+        cluster1.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        cluster1.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        clusters1.add(cluster1);
+        double entropy1 = calculateTotalEntropy(clusters1);
+        System.out.println(entropy1 + " testCalculateTotalEntropy - Single cluster 0.0");
+
+        // Test case 2: Multiple clusters with equal distribution
+        List<List<double[]>> clusters2 = new ArrayList<>();
+        List<double[]> cluster2a = new ArrayList<>();
+        cluster2a.add(new double[]{1.0, 1.0, 1.0, 1.0, 0.0});
+        cluster2a.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        List<double[]> cluster2b = new ArrayList<>();
+        cluster2b.add(new double[]{1.0, 1.0, 1.0, 1.0, 0.0});
+        cluster2b.add(new double[]{1.0, 1.0, 1.0, 1.0, 1.0});
+        clusters2.add(cluster2a);
+        clusters2.add(cluster2b);
+        double entropy2 = calculateTotalEntropy(clusters2);
+        System.out.println(entropy2 + " testCalculateTotalEntropy - Multiple clusters equal distribution 1.0");
     }
 }
