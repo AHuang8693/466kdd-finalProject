@@ -8,3 +8,6 @@ Ryan Smith - Algorithm/processor code
 
 
 Daniel Yi  - Visualization
+* Modified Main and DBSCAN to match format for iris.data and jupyter notebook: 1 hour
+* Jupyter notebook visualizations: 3 hours
+* Entropy implementation on python

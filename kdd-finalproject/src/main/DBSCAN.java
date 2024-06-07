@@ -1,7 +1,5 @@
 package main;
 
-import javax.print.attribute.standard.DateTimeAtProcessing;
-import javax.xml.crypto.Data;
 import java.util.*;
 
 public class DBSCAN {
@@ -31,6 +29,9 @@ public class DBSCAN {
                 }
             }
         }
+
+        clusters.add(new ArrayList<>(noise));
+
         return clusters;
     }
 
