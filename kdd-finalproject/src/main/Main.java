@@ -17,10 +17,10 @@ public class Main {
 //        processor.processData(records);
         double[][] data = convertToDoubleArray(records);
         List<DataPoint> dataList = convertToDataPoint(data);
-
+        //default: 5, 0.5
         int[] minPointsRange = {2, 3, 4, 5, 6, 7, 8, 9, 10};
-        double[] epsilonRange = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
-        double bestEvaluation = 1000;   //arbitrary large number
+        double[] epsilonRange = {0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5};
+        double bestEvaluation = -1;   //worst possible silhouette score
         List<List<DataPoint>> bestClusters = new ArrayList<>();
         int bestMinPoints = minPointsRange[0];
         double bestEpsilon = 0.5;
@@ -29,9 +29,9 @@ public class Main {
             for (double epsilon : epsilonRange) {
                 DBSCAN dbscan = new DBSCAN(epsilon, minPoints);
                 List<List<DataPoint>> clusters = dbscan.fit(dataList);
-                double evaluation = evaluateCluster(clusters);
+                double evaluation = evaluateSilhouette(clusters);
                 System.out.println("MinPoints, Epsilon: [" + minPoints + ", " + epsilon+ "], Evaluation: " + evaluation);
-                if (evaluation < bestEvaluation) {  //we want a low value, since evaluation is average gap size
+                if (evaluation > bestEvaluation) {  //we want a low value, since evaluation is average gap size
                     bestEvaluation = evaluation;
                     bestClusters = clusters;
                     bestMinPoints = minPoints;
@@ -83,19 +83,50 @@ public class Main {
         return data;
     }
 
+    //score - (#noise/#totalPoints) ?
+    public static double evaluateSilhouette(List<List<DataPoint>> clusters) {
+        if (clusters.isEmpty()) { //if no clusters were generated
+            return -1.0; //ranges -1 to 1, with -1 being the worst
+        }
+
+        double totalSilScore = 0;
+        int totalPoints = 0;
+        for (List<DataPoint> someCluster : clusters) {
+            for(DataPoint somePoint : someCluster) {
+                List<DataPoint> tempCluster = new ArrayList<>(someCluster); //make a copy
+                tempCluster.remove(somePoint);  //remove the random point
+                List<Double> distList = new ArrayList<>(); //distance list
+
+                //Calculate a - intra-cluster distance, somePoint to all other points in cluster
+                double intraDist = 0;
+                for (DataPoint point : tempCluster) {
+                    intraDist += findDistance(somePoint, point);
+                }
+                intraDist = intraDist / tempCluster.size(); //dont want to include dist(somePoint, somePoint)
+
+                //Calculate b - nearest cluster dist ()
+                double nearestClusterDist = Double.MAX_VALUE;
+                for (List<DataPoint> otherCluster : clusters) {
+                    if (otherCluster != someCluster) {
+                        double otherClusterDist = 0;
+                        for (DataPoint point : otherCluster) {
+                            otherClusterDist += findDistance(somePoint, point);
+                        }
+                        otherClusterDist = otherClusterDist/otherCluster.size();
+                        if (otherClusterDist < nearestClusterDist) {
+                            nearestClusterDist = otherClusterDist;
+                        }
+                    }
+                }
+                double silhouetteScore = (nearestClusterDist - intraDist) / Math.max(intraDist, nearestClusterDist);
+                totalSilScore += silhouetteScore;
+                totalPoints++;
+            }
+        }
+        return totalSilScore / totalPoints;
+    }
+
     public static double evaluateCluster(List<List<DataPoint>> clusters) {
-        /*
-        Pick random minPoints and epsilon
-        generate clusters
-        Pick a random point in a every cluster
-            In that cluster, calculate distance of that point from every other points (e.g 5, 10, 25)
-            Find the biggest gap between distance (e.g. 15)
-        average all the gaps for each cluster
-        We want to minimize this gap
-         */
-        //silhouette score?
-        //score - (#noise/#totalPoints)
-        //plotly
         if (clusters.isEmpty()) { //if no clusters were generated
             return 1000.0; //large numbers are valued less
         }
