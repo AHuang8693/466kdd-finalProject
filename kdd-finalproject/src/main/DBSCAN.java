@@ -29,6 +29,9 @@ public class DBSCAN {
                 }
             }
         }
+
+        clusters.add(new ArrayList<>(noise));
+
         return clusters;
     }
 
