@@ -1,0 +1,9 @@
+
+Andy Huang - Evaluation code
+* Added evaluation functions for gap score (finding the largest gap distance b/w points in a cluster): 2 hours
+* Added evaluation functions for 
+
+Ryan Smith - Algorithm/processor code
+
+
+Daniel Yi  - Visualization

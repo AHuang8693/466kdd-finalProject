@@ -1,9 +1,6 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DBSCAN {
     private double epsilon;
@@ -14,40 +11,41 @@ public class DBSCAN {
         this.minPoints = minPoints;
     }
 
-    public List<List<double[]>> fit(double[][] data) {
-        List<List<double[]>> clusters = new ArrayList<>();
-        Set<double[]> visited = new HashSet<>();
-        Set<double[]> noise = new HashSet<>();
+    public List<List<DataPoint>> fit(List<DataPoint> data) {
+        List<List<DataPoint>> clusters = new ArrayList<>();
+        HashMap<Integer, DataPoint> visited = new HashMap<>();
+        Set<DataPoint> noise = new HashSet<>();
 
-        for (double[] point : data) {
-            if (!visited.contains(point)) {
-                visited.add(point);
-                List<double[]> neighbors = getNeighbors(point, data);
+        for (DataPoint dPoint : data) {
+            int id = dPoint.getId();
+            if (visited.get(id) == null) { //if point is not visited
+                visited.put(id, dPoint);
+                List<DataPoint> neighbors = getNeighbors(dPoint, data);
                 if (neighbors.size() >= minPoints) {
-                    List<double[]> cluster = new ArrayList<>();
-                    clusters.add(expandCluster(point, neighbors, cluster, visited, data));
+                    List<DataPoint> cluster = new ArrayList<>();
+                    clusters.add(expandCluster(dPoint, neighbors, cluster, visited, data));
                 } else {
-                    noise.add(point);
+                    noise.add(dPoint);
                 }
             }
         }
         return clusters;
     }
 
-    private List<double[]> expandCluster(double[] point,
-                                         List<double[]> neighbors,
-                                         List<double[]> cluster,
-                                         Set<double[]> visited,
-                                         double[][] data) {
+    private List<DataPoint> expandCluster(DataPoint point,
+                                         List<DataPoint> neighbors,
+                                         List<DataPoint> cluster,
+                                          HashMap<Integer, DataPoint> visited,
+                                         List<DataPoint> data) {
         cluster.add(point);
 
         int index = 0;
         while (index < neighbors.size()) {
-            double[] neighbor = neighbors.get(index);
-
-            if (!visited.contains(neighbor)) {
-                visited.add(neighbor);
-                List<double[]> neighborNeighbors = getNeighbors(neighbor, data);
+            DataPoint neighbor = neighbors.get(index);
+            int id = neighbor.getId();
+            if (visited.get(id) == null) {  //doesn't have datapoint in map
+                visited.put(id, neighbor);
+                List<DataPoint> neighborNeighbors = getNeighbors(neighbor, data);
                 if (neighborNeighbors.size() >= minPoints) {
                     neighbors.addAll(neighborNeighbors);
                 }
@@ -61,9 +59,9 @@ public class DBSCAN {
         return cluster;
     }
 
-    private List<double[]> getNeighbors(double[] point, double[][] data) {
-        List<double[]> neighbors = new ArrayList<>();
-        for (double[] candidate : data) {
+    private List<DataPoint> getNeighbors(DataPoint point, List<DataPoint> data) {
+        List<DataPoint> neighbors = new ArrayList<>();
+        for (DataPoint candidate : data) {
             if (distance(point, candidate) <= epsilon) {
                 neighbors.add(candidate);
             }
@@ -71,16 +69,16 @@ public class DBSCAN {
         return neighbors;
     }
 
-    private double distance(double[] point1, double[] point2) {
+    private double distance(DataPoint point1, DataPoint point2) {
         double sum = 0;
-        for (int i = 0; i < point1.length; i++) {
-            sum += Math.pow(point1[i] - point2[i], 2);
+        for (int i = 0; i < point1.getData().length; i++) {
+            sum += Math.pow(point1.getData()[i] - point2.getData()[i], 2);
         }
         return Math.sqrt(sum);
     }
 
-    private boolean isInCluster(double[] point, List<double[]> cluster) {
-        for (double[] clusterPoint : cluster) {
+    private boolean isInCluster(DataPoint point, List<DataPoint> cluster) {
+        for (DataPoint clusterPoint : cluster) {
             if (clusterPoint == point) {
                 return true;
             }
