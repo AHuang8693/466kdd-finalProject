@@ -214,20 +214,26 @@ public class Main {
         }
         int totalInstances = cluster.size();
         double entropy = 0.0;
+        int tempctr = 1;
         for (Map.Entry<String, Integer> entry : labelCounts.entrySet()) {
             double proportion = (double) entry.getValue() / totalInstances;
-            entropy += proportion * log2(proportion);
+//            System.out.println("E" + tempctr++ + ": " + (proportion * log2(proportion)));
+//            System.out.println("Proportion" + proportion);
+            entropy -= proportion * log2(proportion);
         }
+//        System.out.println(entropy);
 
-        return -1.0 * entropy;
+        return entropy;
     }
 
     public static double calculateTotalEntropy(List<List<DataPoint>> clusters, List<DataPoint> dataPoints) {
         double totalEntropy = 0.0;
         int totalInstances = 0;
 
+//        int tempctr = 1;
         for (List<DataPoint> cluster : clusters) {
             totalInstances += cluster.size();
+//            System.out.println("Cluster "+ tempctr++ +" Entropy: ");
             totalEntropy += calculateClusterEntropy(cluster) * ((double) cluster.size() /dataPoints.size());
         }
         if (totalInstances==0){
