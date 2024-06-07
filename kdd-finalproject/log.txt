@@ -1,13 +1,14 @@
-
 Andy Huang - Evaluation code
-* Added evaluation functions for gap score (finding the largest gap distance b/w points in a cluster): 1 hours
-* Added evaluation functions for silhouette score: 2 hours
+* Added evaluation functions for gap score (finding the largest gap distance b/w points in a cluster): 1.5 hours
+* Added evaluation functions for silhouette score: 3 hours
 * changed double[] data into DataPoint class: 1 hour
 
 Ryan Smith - Algorithm/processor code
-
+* Added Processor and CSVProcessor: 1 hour
+* Added DBSCAN Algorithm: 4 hour
+* Entropy and purity attempt in java: 1.5 hour
 
 Daniel Yi  - Visualization
 * Modified Main and DBSCAN to match format for iris.data and jupyter notebook: 1 hour
 * Jupyter notebook visualizations: 3 hours
-* Entropy implementation on python
+* Entropy implementation on python: 1 hour
