@@ -9,24 +9,26 @@ import java.util.ArrayList;
 
 
 public class Main {
+
     public static void main(String[] args) {
         Processor processor = new CSVProcessor();
         List<String[]> records = processor.readData("./files/iris.data");
-        records.remove(0);
+//        records.remove(0);
 //        processor.processData(records);
         double[][] data = convertToDoubleArray(records);
+        List<DataPoint> dataList = convertToDataPoint(data);
 
         int[] minPointsRange = {2, 3, 4, 5, 6, 7, 8, 9, 10};
         double[] epsilonRange = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
         double bestEvaluation = 1000;   //arbitrary large number
-        List<List<double[]>> bestClusters = new ArrayList<>();
+        List<List<DataPoint>> bestClusters = new ArrayList<>();
         int bestMinPoints = minPointsRange[0];
         double bestEpsilon = 0.5;
 
         for (int minPoints : minPointsRange) {
             for (double epsilon : epsilonRange) {
                 DBSCAN dbscan = new DBSCAN(epsilon, minPoints);
-                List<List<double[]>> clusters = dbscan.fit(data);
+                List<List<DataPoint>> clusters = dbscan.fit(dataList);
                 double evaluation = evaluateCluster(clusters);
                 System.out.println("MinPoints, Epsilon: [" + minPoints + ", " + epsilon+ "], Evaluation: " + evaluation);
                 if (evaluation < bestEvaluation) {  //we want a low value, since evaluation is average gap size
@@ -42,9 +44,9 @@ public class Main {
         System.out.println("Clusters:");
         for (int i = 0; i < bestClusters.size(); i++) {
             System.out.println("Cluster " + (i + 1) + ":");
-            for (double[] point : bestClusters.get(i)) {
+            for (DataPoint point : bestClusters.get(i)) {
                 System.out.print("(");
-                for (double val : point) {
+                for (double val : point.getData()) {
                     System.out.print(val + " ");
                 }
                 System.out.println(")");
@@ -81,7 +83,7 @@ public class Main {
         return data;
     }
 
-    public static double evaluateCluster(List<List<double[]>> clusters) {
+    public static double evaluateCluster(List<List<DataPoint>> clusters) {
         /*
         Pick random minPoints and epsilon
         generate clusters
@@ -99,14 +101,14 @@ public class Main {
         }
         double totalSize = 0;   //else, find the avg gap for all clusters
         double gapSum = 0;
-        for (List<double[]> cluster : clusters) {
+        for (List<DataPoint> cluster : clusters) {
             if(cluster.size() > 1) {
                 Random randomizer = new Random();
-                double[] randPoint = cluster.get(randomizer.nextInt(cluster.size())); //choose random point
-                List<double[]> tempCluster = new ArrayList<>(cluster); //make a copy
+                DataPoint randPoint = cluster.get(randomizer.nextInt(cluster.size())); //choose random point
+                List<DataPoint> tempCluster = new ArrayList<>(cluster); //make a copy
                 tempCluster.remove(randPoint);  //remove the random point
                 List<Double> distList = new ArrayList<>(); //distance list
-                for (double[] point : tempCluster) {
+                for (DataPoint point : tempCluster) {
                     distList.add(findDistance(randPoint, point));
                 }
                 Collections.sort(distList);
@@ -118,10 +120,10 @@ public class Main {
         return gapSum / clusters.size(); // Average the gap of all clusters
     }
 
-    private static double findDistance(double[] point1, double[] point2) {
+    private static double findDistance(DataPoint point1, DataPoint point2) {
         double sum = 0;
-        for (int i = 0; i < point1.length; i++) {
-            sum += Math.pow(point1[i] - point2[i], 2);
+        for (int i = 0; i < point1.getData().length; i++) {
+            sum += Math.pow(point1.getData()[i] - point2.getData()[i], 2);
         }
         return Math.sqrt(sum);
     }
@@ -148,13 +150,13 @@ public class Main {
         } else {return myList.get(0);} //if size is 1, then cluster size is 2. distance is already the maxGap
     }
 
-    public static void writeClustersToFile(List<List<double[]>> bestClusters, String fileName) {
+    public static void writeClustersToFile(List<List<DataPoint>> bestClusters, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (int i = 0; i < bestClusters.size(); i++) {
-                for (double[] point : bestClusters.get(i)) {
+                for (DataPoint point : bestClusters.get(i)) {
 
-                    for (int j = 0; j < point.length; j++) {
-                        writer.write(point[j] + (j < point.length - 1 ? ", " : ""));
+                    for (int j = 0; j < point.getData().length; j++) {
+                        writer.write(point.getData()[j] + (j < point.getData().length - 1 ? ", " : ""));
                     }
                     writer.write(", " + (i + 1) + "\n");
                 }
@@ -163,5 +165,16 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static List<DataPoint> convertToDataPoint(double[][] data) {
+        List<DataPoint> dataList = new ArrayList<>();
+        int count = 0;
+        for (double[] point : data) {
+                DataPoint p = new DataPoint(count, point);
+                dataList.add(p);
+                count++;
+        }
+        return dataList;
     }
 }
