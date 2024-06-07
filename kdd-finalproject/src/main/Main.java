@@ -18,7 +18,7 @@ public class Main {
         List<DataPoint> dataList = convertToDataPoint(data);
         //default: 5, 0.5
         int[] minPointsRange = {2, 3, 4, 5, 6, 7, 8, 9, 10};
-        double[] epsilonRange = {0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5};
+        double[] epsilonRange = {0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5};
         double bestEvaluation = -1;   //worst possible silhouette score
         List<List<DataPoint>> bestClusters = new ArrayList<>();
         int bestMinPoints = minPointsRange[0];
@@ -202,6 +202,10 @@ public class Main {
         }
     }
 
+    private static double log2(double input){
+        return Math.log(input)/Math.log(2);
+    }
+
     public static double calculateClusterEntropy(List<DataPoint> cluster) {
         Map<String, Integer> labelCounts = new HashMap<>();
         for (DataPoint point : cluster) {
@@ -211,10 +215,11 @@ public class Main {
         int totalInstances = cluster.size();
         double entropy = 0.0;
         for (Map.Entry<String, Integer> entry : labelCounts.entrySet()) {
-            double probability = (double) entry.getValue() / totalInstances;
-            entropy -= probability * (Math.log(probability) / Math.log(2));
+            double proportion = (double) entry.getValue() / totalInstances;
+            entropy += proportion * log2(proportion);
         }
-        return entropy;
+
+        return -1.0 * entropy;
     }
 
     public static double calculateTotalEntropy(List<List<DataPoint>> clusters, List<DataPoint> dataPoints) {
@@ -226,6 +231,7 @@ public class Main {
             totalEntropy += calculateClusterEntropy(cluster) * ((double) cluster.size() /dataPoints.size());
         }
         if (totalInstances==0){
+            System.out.println("Zero Total Instances");
             return 0;
         }else {
             return totalEntropy / totalInstances;
@@ -247,6 +253,7 @@ public class Main {
             totalInstances += cluster.size();
         }
         if (totalInstances==0){
+            System.out.println("Zero Total Instances");
             return 0;
         }else {
             return (double) sumMaxLabelCounts / totalInstances;
