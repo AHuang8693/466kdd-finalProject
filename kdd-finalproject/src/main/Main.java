@@ -150,14 +150,13 @@ public class Main {
         } else {return myList.get(0);} //if size is 1, then cluster size is 2. distance is already the maxGap
     }
 
-<<<<<<< Updated upstream
-    public static void writeClustersToFile(List<List<double[]>> bestClusters, String fileName) {
+    public static void writeClustersToFile(List<List<DataPoint>> bestClusters, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (int i = 0; i < bestClusters.size(); i++) {
-                for (double[] point : bestClusters.get(i)) {
+                for (DataPoint point : bestClusters.get(i)) {
 
-                    for (int j = 0; j < point.length; j++) {
-                        writer.write(point[j] + (j < point.length - 1 ? ", " : ""));
+                    for (int j = 0; j < point.getData().length; j++) {
+                        writer.write(point.getData()[j] + (j < point.getData().length - 1 ? ", " : ""));
                     }
                     writer.write(", " + (i + 1) + "\n");
                 }
@@ -166,7 +165,8 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-=======
+    }
+
     private static List<DataPoint> convertToDataPoint(double[][] data) {
         List<DataPoint> dataList = new ArrayList<>();
         int count = 0;
@@ -176,6 +176,5 @@ public class Main {
                 count++;
         }
         return dataList;
->>>>>>> Stashed changes
     }
 }
